@@ -1,0 +1,6 @@
+
+
+CANDLE_PERIOD = '1wk'
+ROLLING_PERIOD = 14
+
+MARKETS = ['SPY']
