@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: rsi-mfi-notify
-Version: 0.0.1
-Summary: Deploy cron job on cloud to notify when stocks mfi and rsi peak (sell) or bottom (buy)
-Author: 
-Author-email: 
-License: MIT
