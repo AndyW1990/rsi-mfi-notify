@@ -1,0 +1,11 @@
+README.md
+setup.py
+rsi_mfi_notify.egg-info/PKG-INFO
+rsi_mfi_notify.egg-info/SOURCES.txt
+rsi_mfi_notify.egg-info/dependency_links.txt
+rsi_mfi_notify.egg-info/not-zip-safe
+rsi_mfi_notify.egg-info/requires.txt
+rsi_mfi_notify.egg-info/top_level.txt
+tests/__init__.py
+tests/test_buy.py
+tests/test_sell.py
