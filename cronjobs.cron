@@ -1,1 +1,1 @@
-21 08 * * 1 python3 main.py #run_markets
+21 08 * * 1 python3 app/main.py #run_markets

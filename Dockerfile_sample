@@ -15,7 +15,8 @@ WORKDIR /rsi_mfi_notify
 RUN pip install --upgrade pip
 COPY requirements_prod.txt requirements.txt
 RUN pip install -r requirements.txt
-COPY . .
+COPY setup.py setup.py
+COPY app app
 RUN pip install .
 
 #### SETUP VARIABLES ####
