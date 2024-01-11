@@ -7,7 +7,7 @@ import ssl
 from smtplib import SMTP
 from params import *
 
-def run_markets(test=False, test_rsi=0.6, test_mfi=0.6):
+def run_markets(test=False, test_rsi=60, test_mfi=60, use_send=True):
 
     #main loop over markets in params
     for market in MARKETS:
@@ -21,11 +21,11 @@ def run_markets(test=False, test_rsi=0.6, test_mfi=0.6):
         data['Gain'] = data['Change'].mask(data['Change'] < 0, 0.0)
         data['Loss'] = -data['Change'].mask(data['Change'] > 0, -0.0)
         
-        data['Avg Gain'] = data['Gain'].rolling(ROLLING_PERIOD).mean()
-        data['Avg Loss'] = data['Loss'].rolling(ROLLING_PERIOD).mean()
+        data['Avg Gain'] = data['Gain'].ewm(com=ROLLING_PERIOD, adjust=False).mean()
+        data['Avg Loss'] = data['Loss'].ewm(com=ROLLING_PERIOD, adjust=False).mean()
         
         data['RS'] = data['Avg Gain'] / data['Avg Loss']
-        data['RSI'] = 1 - (1 / (1 + data['RS']))
+        data['RSI'] = 100 - (100 / (1 + data['RS']))
         
         
         #Calculate the MFI
@@ -54,7 +54,7 @@ def run_markets(test=False, test_rsi=0.6, test_mfi=0.6):
         data['Positive MF'] = data['Positive Flow'].rolling(ROLLING_PERIOD).sum()
         data['Negative MF'] = data['Negative Flow'].rolling(ROLLING_PERIOD).sum()    
                 
-        data['MFI'] = data['Positive MF']/ (data['Positive MF'] + data['Negative MF'])
+        data['MFI'] = 100 * data['Positive MF']/ (data['Positive MF'] + data['Negative MF'])
         
         if test:
             rsi = test_rsi
@@ -66,14 +66,14 @@ def run_markets(test=False, test_rsi=0.6, test_mfi=0.6):
         
         
         #Create message if oversold/overbought
-        if rsi >= 0.7 and mfi >= 0.7:
-            message = f'{market} is overbought, sell a percentage of stock! \nRSI = {rsi:.2f} \nMFI = {mfi:.2f}'
+        if rsi >= 70 and mfi >= 70:
+            message = f'{market} is overbought, sell a percentage of stock! \nRSI = {rsi:.1f} \nMFI = {mfi:.1f}'
             send = True
-        elif rsi <= 0.5 and mfi <= 0.5:
-            message = f'{market} is oversold, consider buying some stock. \nRSI = {rsi:.2f} \nMFI = {mfi:.2f}'
+        elif rsi <= 50 and mfi <= 50:
+            message = f'{market} is oversold, consider buying some stock. \nRSI = {rsi:.1f} \nMFI = {mfi:.1f}'
             send = True
         else:
-            message = f'{market} is neither oversold nor overbought. \nRSI = {rsi:.2f} \nMFI = {mfi:.2f}'
+            message = f'{market} is neither oversold nor overbought. \nRSI = {rsi:.1f} \nMFI = {mfi:.1f}'
             send = False
         
         #send email if required
@@ -85,20 +85,21 @@ def run_markets(test=False, test_rsi=0.6, test_mfi=0.6):
 To: {SES_TO}
 Subject: Notice of significant change in {market}\n
 {message}"""
-
-            # setting up ssl context
-            context = ssl.create_default_context()
             
-            with SMTP(SES_HOST_ADDRESS,SES_PORT) as server:
+            if use_send:
+                # setting up ssl context
+                context = ssl.create_default_context()
+                
+                with SMTP(SES_HOST_ADDRESS,SES_PORT) as server:
 
-                # securing using tls
-                server.starttls(context=context)
+                    # securing using tls
+                    server.starttls(context=context)
 
-                # authenticating with the server to prove our identity
-                server.login(user=SES_USER_ID, password=SES_PASSWORD)
+                    # authenticating with the server to prove our identity
+                    server.login(user=SES_USER_ID, password=SES_PASSWORD)
 
-                # sending a plain text email
-                server.sendmail(SES_FROM, SES_TO, email)
+                    # sending a plain text email
+                    server.sendmail(SES_FROM, SES_TO, email)
                 
         else:
             print_message = f'No email sent as {message}'
@@ -107,4 +108,4 @@ Subject: Notice of significant change in {market}\n
         return print_message
 
 if __name__ == '__main__':
-    run_markets(test=True, test_rsi=0.5, test_mfi=0.6)
+    run_markets(test=True, test_rsi=70, test_mfi=70)

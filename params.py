@@ -6,7 +6,7 @@ CANDLE_PERIOD = '1wk'
 ROLLING_PERIOD = 14
 
 ####### VARIABLES #######
-MARKETS = ['SPY']
+MARKETS = ['SPY', 'QTUM']
 
 ####### CREDENTIALS #######
 SES_HOST_ADDRESS = os.environ.get('SES_HOST_ADDRESS')
