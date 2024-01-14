@@ -8,7 +8,7 @@ from smtplib import SMTP
 from params import *
 
 def run_markets(test=False, test_rsi=60, test_mfi=60, use_send=True):
-
+    
     #main loop over markets in params
     for market in MARKETS:
         
@@ -105,7 +105,7 @@ Subject: Notice of significant change in {market}\n
             print_message = f'No email sent as {message}'
 
         print(print_message)
-        return print_message
+    return print_message
 
 if __name__ == '__main__':
-    run_markets(test=True, test_rsi=70, test_mfi=70)
+    run_markets()

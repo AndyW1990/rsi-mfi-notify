@@ -1,18 +1,10 @@
 
 FROM python:3.11-slim-bookworm
 
-#### SETUP CRON ####
-RUN apt-get update && apt-get -y install cron
-# Copy hello-cron file to the cron.d directory
-COPY cronjobs.cron /etc/cron.d/cronjobs
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/cronjobs
-# Apply cron job
-RUN crontab /etc/cron.d/cronjobs
-
 #### SETUP PACKAGE ####
 WORKDIR /rsi_mfi_notify
 RUN pip install --upgrade pip
+RUN PATH=/usr/local/bin
 COPY requirements_prod.txt requirements.txt
 RUN pip install -r requirements.txt
 COPY setup.py setup.py
@@ -27,6 +19,5 @@ ENV SES_PASSWORD=""
 ENV SES_FROM=""
 ENV SES_TO=""
 
-# Run the command on container startup
-CMD cron
+ENTRYPOINT python3 app/main.py
 
