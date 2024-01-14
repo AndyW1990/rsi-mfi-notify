@@ -2,7 +2,7 @@ import os
 
 import pytest
 import unittest
-from main import run_markets
+from app.main import run_markets
 
 class TestVals(unittest.TestCase):
          
