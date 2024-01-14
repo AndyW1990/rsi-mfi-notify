@@ -4,7 +4,7 @@
 setup_env:
 	pyenv virtualenv rsi_mfi_nofity
 	pyenv local rsi_mfi_nofity
-	mv .envsample .env
+	mv .env_sample .env
 	direnv allow .
 	pip install -e . 
 
