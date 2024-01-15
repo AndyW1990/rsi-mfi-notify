@@ -5,12 +5,16 @@ import numpy as np
 import yfinance as yf
 import ssl
 from smtplib import SMTP
-from params import *
+from app.params import *
 
-def run_markets(test=False, test_rsi=60, test_mfi=60, use_send=True):
+def run_markets(test=False, test_market='^SPX', test_rsi=60, test_mfi=60, use_send=True):
     
+    if test:
+        markets = [test_market]
+    else:
+        markets = MARKETS
     #main loop over markets in params
-    for market in MARKETS:
+    for market in markets:
         
         #Get OHLCV data from yahoo finance
         data = yf.download(market, interval = CANDLE_PERIOD)
@@ -59,10 +63,12 @@ def run_markets(test=False, test_rsi=60, test_mfi=60, use_send=True):
         if test:
             rsi = test_rsi
             mfi = test_mfi
+            subject = 'TEST - Ignore this email'
         else:
             #take end of last week info (don't take current partial week)
             rsi = data['RSI'].iloc[-2]
             mfi = data['MFI'].iloc[-2]
+            subject = f'Notice of significant change in {market}'
         
         
         #Create message if oversold/overbought
@@ -77,35 +83,34 @@ def run_markets(test=False, test_rsi=60, test_mfi=60, use_send=True):
             send = False
         
         #send email if required
-        if send:
+        if send and use_send:
             print_message = f'Sending email as {message}'
             
             #contruct email, must be formatted without whitespace as AWS is fussy  
             email = f"""From: {SES_FROM}
-To: {SES_TO}
-Subject: Notice of significant change in {market}\n
+To: {SES_TO[0]}
+Subject: {subject}\n
 {message}"""
             
-            if use_send:
-                # setting up ssl context
-                context = ssl.create_default_context()
-                
-                with SMTP(SES_HOST_ADDRESS,SES_PORT) as server:
+            # setting up ssl context
+            context = ssl.create_default_context()
+            
+            with SMTP(SES_HOST_ADDRESS,SES_PORT) as server:
 
-                    # securing using tls
-                    server.starttls(context=context)
+                # securing using tls
+                server.starttls(context=context)
 
-                    # authenticating with the server to prove our identity
-                    server.login(user=SES_USER_ID, password=SES_PASSWORD)
+                # authenticating with the server to prove our identity
+                server.login(user=SES_USER_ID, password=SES_PASSWORD)
 
-                    # sending a plain text email
-                    server.sendmail(SES_FROM, SES_TO, email)
-                
+                # sending a plain text email
+                server.sendmail(SES_FROM, SES_TO, email)
+            
         else:
             print_message = f'No email sent as {message}'
 
         print(print_message)
-    return print_message
+    return message
 
 if __name__ == '__main__':
     run_markets()
