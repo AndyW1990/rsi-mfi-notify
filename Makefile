@@ -22,8 +22,12 @@ docker_push:
 ##################### TESTS #####################
 test_vals:
 	@pytest \
-	tests/test_vals.py::TestVals::test_buy \
-	tests/test_vals.py::TestVals::test_sell \
-	tests/test_vals.py::TestVals::test_do_nothing_1 \
-	tests/test_vals.py::TestVals::test_do_nothing_2 \
-	tests/test_vals.py::TestVals::test_do_nothing_3
+	tests/test.py::TestVals::test_buy \
+	tests/test.py::TestVals::test_sell \
+	tests/test.py::TestVals::test_do_nothing_1 \
+	tests/test.py::TestVals::test_do_nothing_2 \
+	tests/test.py::TestVals::test_do_nothing_3
+
+test_email:
+	@pytest \
+	tests/test.py::TestEmail::test_buy

@@ -5,6 +5,7 @@ This repo was built to setup email notifications of significant changes in stock
 
 A cron job is setup on an AWS EC2 instance to run a Docker container every Monday morning. The script loops over markets in a list and sends an email via AWS SES to notify of buying and selling opportunities.
 
+
 # Built With
 Frameworks:
 - Python

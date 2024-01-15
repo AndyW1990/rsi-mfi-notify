@@ -17,7 +17,8 @@ ENV SES_USERNAME=""
 ENV SES_USER_ID=""
 ENV SES_PASSWORD=""
 ENV SES_FROM=""
-ENV SES_TO=""
+ENV SES_TO='["recpient_1_@mail.com", "recpient_2_@mail.com"]'
+ENV MARKETS='["^SPX", "^NDX"]'
 
 ENTRYPOINT python3 app/main.py
 
