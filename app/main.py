@@ -66,8 +66,8 @@ def run_markets(test=False, test_market='^SPX', test_rsi=60, test_mfi=60, use_se
             subject = 'TEST - Ignore this email'
         else:
             #take end of last week info (don't take current partial week)
-            rsi = data['RSI'].iloc[-2]
-            mfi = data['MFI'].iloc[-2]
+            rsi = data['RSI'].iloc[-1]
+            mfi = data['MFI'].iloc[-1]
             subject = f'Notice of significant change in {market}'
         
         
