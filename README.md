@@ -3,7 +3,7 @@
 
 This repo was built to setup email notifications of significant changes in stocks and funds. A simple strategy using the weekly RSI and MFI to indicate whether oversold (RSI & MFI < 50) or overbought (RSI & MFI > 70).
 
-A cron job is setup on an AWS EC2 instance to run a Docker container every Monday morning. The script loops over markets in a list and sends an email via AWS SES to notify of buying and selling opportunities.
+A cron job is setup on an AWS EC2 instance to run a Docker container every Sunday evening (before next week open). The script loops over markets in a list and sends an email via AWS SES to notify of buying and selling opportunities.
 
 
 # Built With
